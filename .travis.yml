@@ -1,0 +1,16 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - hhvm
+
+before_script:
+  - composer self-update
+  - composer install --no-interaction --prefer-source --dev
+  - composer create-project --prefer-source --dev --no-interaction jakub-onderka/php-parallel-lint parallel-lint ~0.8.0
+
+script:
+  - php parallel-lint/parallel-lint.php -e php,phpt src tests
+  - vendor/bin/phpcs -sp --standard=vendor/nella/coding-standard/Nella/ruleset.xml --ignore=tests/bootstrap.php src tests
+  - vendor/bin/tester -c tests/php.ini -s -p php tests
